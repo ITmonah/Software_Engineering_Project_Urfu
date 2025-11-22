@@ -2,5 +2,6 @@ __pycache__/
 __pycache__/main.cpython-311.pyc
 
 .vscode/
+.venv/
 .env
 *.pt
