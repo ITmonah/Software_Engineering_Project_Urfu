@@ -1,4 +1,9 @@
 fastapi
+seaborn
+numpy
+pydentic
+ultralytics
+tqdm
 uvicorn
 torch
 torchvision
