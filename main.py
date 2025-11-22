@@ -6,7 +6,7 @@ from io import BytesIO
 from PIL import Image
 
 # Загружаем модель при старте приложения
-model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+modelYOLOV5 = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 
 app = FastAPI(title="YOLOv5 Object Detection")
 
@@ -24,7 +24,7 @@ async def detect(image_url: str):
     try:
         image = load_image_from_url(image_url)
         
-        results = model(image)
+        results = modelYOLOV5(image)
         
         detections = results.pandas().xyxy[0]
         
