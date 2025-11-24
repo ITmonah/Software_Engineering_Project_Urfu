@@ -1,4 +1,4 @@
-fastapi
+fastapi[standard]
 seaborn
 numpy
 pydentic
