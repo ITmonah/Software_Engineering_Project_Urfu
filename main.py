@@ -11,16 +11,14 @@ modelYOLOV5 = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 app = FastAPI(title="YOLOv5 Object Detection")
 
 def load_image_from_url(url: str) -> Image.Image:
-    """Загружает изображение из URL"""
+    # Загружает изображение из URL
     response = requests.get(url)
     response.raise_for_status()
     return Image.open(BytesIO(response.content))
 
 @app.get("/detect", response_model=DetectionResponse)
 async def detect(image_url: str):
-    """
-    Выполняет детекцию объектов на изображении по URL
-    """
+    # Выполняет детекцию объектов на изображении по URL
     try:
         image = load_image_from_url(image_url)
         
