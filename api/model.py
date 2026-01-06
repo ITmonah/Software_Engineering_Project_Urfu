@@ -1,10 +1,14 @@
-from fastapi import APIRouter
-from modelsPyd import DetectionResponse
-from api.endpoints.modelEnd import detect as detect_handler
+from fastapi import APIRouter, Request
+from modelsPyd import DetectionResponse, ChangeModelResponse
+from api.endpoints.modelEnd import detect, change_version
 
 router = APIRouter()
 
 
-@router.get("/detect", response_model=DetectionResponse)
-async def detect(image_url: str):
-    return await detect_handler(image_url)
+@router.get("/detect")
+async def detect_image(image_url: str, request: Request):
+    return await detect(image_url, request)
+
+@router.get("/change_version", response_model=ChangeModelResponse)
+async def change(version: int, request: Request):
+    return await change_version(version, request)
