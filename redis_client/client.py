@@ -1,12 +1,10 @@
 import redis.asyncio as redis
 from typing import Optional
-import logging
 from dotenv import load_dotenv
 import os
+from helpers.logger import log
 
 load_dotenv()
-
-logger = logging.getLogger(__name__)
 
 # Глобальная переменная для клиента
 redis_client: Optional[redis.Redis] = None
@@ -16,7 +14,7 @@ async def init_redis(
     port: int = int(os.getenv("REDIS_PORT", 6379)),
     db: int = int(os.getenv("REDIS_DB", 0)),
 ) -> redis.Redis:
-    """Инициализация Redis и возврат клиента"""
+    func_name = "init_redis"
     global redis_client
     
     try:
@@ -30,24 +28,23 @@ async def init_redis(
         
         # Проверка подключения
         await redis_client.ping()
-        logger.info("Redis подключен")
+        log(func_name, "Redis подключение успешно установлено", "INFO")
         
         return redis_client
         
     except Exception as e:
-        logger.error(f"Ошибка подключения к Redis: {e}")
+        log(func_name, f"Ошибка подключения к Redis: {e}", "ERROR")
         raise
 
 def get_redis() -> redis.Redis:
-    """Получение Redis клиента"""
     if redis_client is None:
         raise RuntimeError("Redis не инициализирован")
     return redis_client
 
 async def close_redis():
-    """Закрытие подключения"""
     global redis_client
+    func_name = "close_redis"
     if redis_client:
         await redis_client.close()
         redis_client = None
-        logger.info("Redis отключен")
+        log(func_name, "Redis соединение закрыто", "INFO")

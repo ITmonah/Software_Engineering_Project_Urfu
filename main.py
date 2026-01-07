@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from api.model import router as api_router
 from contextlib import asynccontextmanager
 from redis_client.client import init_redis, close_redis, get_redis
+from helpers.logger import log
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -9,12 +10,12 @@ async def lifespan(app: FastAPI):
     redis = get_redis()
     await redis.set("test", "Hello Redis!")
     value = await redis.get("test")
-    print("Redis работает!", "value: ", value)
+    log("lifespan", f"Редис запустился, тестовой значение: {value}", "INFO")
 
     yield
     await close_redis()
 
 app = FastAPI(title="YOLO Object Detection", lifespan=lifespan)
 
-# Подключаем роуты из API
+# Подключение роутов из API
 app.include_router(api_router)
