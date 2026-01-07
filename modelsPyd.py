@@ -13,4 +13,7 @@ class DetectionResult(BaseModel):
 class DetectionResponse(BaseModel):
     results: List[DetectionResult]
 
+class ChangeModelResponse(BaseModel):
+    result: str
+
 
