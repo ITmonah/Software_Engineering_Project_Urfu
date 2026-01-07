@@ -101,7 +101,7 @@ async def detect(image_url: str, request: Request):
                 name = class_name
             ))
 
-        return DetectionResponse(results=formatted_results)
+        return DetectionResponse(results=formatted_results, model_version=version)
 
     except Exception as e:
         log(func_name, f"Ошибка обработки изображения: {e}", "ERROR")
