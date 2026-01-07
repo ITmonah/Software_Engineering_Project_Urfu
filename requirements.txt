@@ -10,5 +10,3 @@ torchvision
 pillow
 requests
 pytest
-redis
-python-dotenv
