@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+
 
 class DetectionResult(BaseModel):
     xmin: float
@@ -10,10 +10,10 @@ class DetectionResult(BaseModel):
     class_: int
     name: str
 
+
 class DetectionResponse(BaseModel):
-    results: List[DetectionResult]
+    results: list[DetectionResult]
+
 
 class ChangeModelResponse(BaseModel):
     result: str
-
-
