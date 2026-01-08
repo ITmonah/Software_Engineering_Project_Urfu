@@ -27,13 +27,15 @@ pip install -r requirements.txt
 
 Заупск через Docker
 
+```bash
 docker compose up --build
-
+```
 
 Остановка через Docker
 
+```bash
 docker compose down
-
+```
 
 Запуск Redis (например, в Docker):
 
