@@ -1,29 +1,13 @@
-name: CI
+name: Integration tests (manual)
 
 on:
-  pull_request:
-  push:
-    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
-  lint:
+  integration:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-      - name: Install tools
-        run: |
-          python -m pip install --upgrade pip
-          pip install ruff black
-      - name: Ruff
-        run: ruff check .
-      - name: Black
-        run: black --check .
+    timeout-minutes: 30
 
-  test:
-    runs-on: ubuntu-latest
     services:
       redis:
         image: redis:7-alpine
@@ -37,6 +21,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
@@ -47,9 +32,9 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
-      - name: Run tests (fast)
+      - name: Run integration tests
         env:
           REDIS_HOST: localhost
           REDIS_PORT: "6379"
         run: |
-          pytest -q -m "not integration"
+          pytest -q -m integration
