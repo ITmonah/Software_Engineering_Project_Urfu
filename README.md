@@ -8,6 +8,7 @@
 
 Требования:
 
+- Docker, Docker Compose (v2+)
 - Python 3.8+ (рекомендовано 3.10+)
 - Redis (локально или в контейнере)
 
@@ -23,6 +24,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 ```
+
+Заупск через Docker
+
+docker compose up --build
+
+
+Остановка через Docker
+
+docker compose down
+
 
 Запуск Redis (например, в Docker):
 
@@ -141,7 +152,7 @@ pip install -r requirements.txt
 docker run -p 6379:6379 --name redis -d redis:latest
 
 # Запуск сервера в режиме разработки
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn main:app --reload
 
 # Запуск тестов
 pytest tests/tests.py -q
