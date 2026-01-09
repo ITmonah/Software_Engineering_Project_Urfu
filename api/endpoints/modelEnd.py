@@ -1,7 +1,7 @@
 from io import BytesIO
 
 import requests
-from fastapi import Request
+from fastapi import Request, Response
 from PIL import Image
 from ultralytics import YOLO
 
@@ -37,10 +37,14 @@ def get_client_ip(request: Request) -> str | None:
     return None
 
 
-async def change_version(version: int, request: Request):
+async def change_version(version: int, request: Request, response: Response):
     # Меняет предпочитаемую версию модели для IP в Redis
     func_name = "change_version"
     try:
+        if version < 0 or version >= len(available_version):
+            response.status_code = 400
+            log(func_name, f"Недопустимая версия модели: {version}", "ERROR")
+            return {"result": "Недопустимая версия модели"}
         redis = get_redis()
 
         ip = get_client_ip(request)
@@ -53,11 +57,12 @@ async def change_version(version: int, request: Request):
         return {"result": f"Версия модели изменена на {available_version[version]}"}
 
     except Exception as e:
+        response.status_code = 400
         log(func_name, f"Ошибка смены версии: {e}", "ERROR")
         return {"result": "Ошибка смены версии"}
 
 
-async def detect(image_url: str, request: Request):
+async def detect(image_url: str, request: Request, response: Response):
     # Выполняет детекцию объектов по URL изображения и возвращает структурированный ответ
     func_name = "detect"
     try:
@@ -109,5 +114,6 @@ async def detect(image_url: str, request: Request):
         return DetectionResponse(results=formatted_results, model_version=version)
 
     except Exception as e:
+        response.status_code = 400
         log(func_name, f"Ошибка обработки изображения: {e}", "ERROR")
         return DetectionResponse(results=[])
