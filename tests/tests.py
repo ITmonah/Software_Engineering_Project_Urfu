@@ -118,8 +118,34 @@ def test_detect_response_schema_is_stable():
 
 
 @pytest.mark.integration
+def test_detect_rejects_invalid_url():
+    response = client.get("/detect", params={"image_url": "not-a-url"})
+    assert response.status_code in (400, 422)
+
+
+@pytest.mark.integration
+def test_detect_unreachable_url_returns_error():
+    response = client.get(
+        "/detect",
+        params={"image_url": "https://example.invalid/some.jpg"},
+    )
+    assert response.status_code in (400, 502, 504)
+
+
+def test_change_version_out_of_range_negative():
+    with TestClient(app) as client:
+        response = client.get("/change_version", params={"version": -1})
+        assert response.status_code in (400, 422)
+
+
+def test_change_version_out_of_range_large():
+    with TestClient(app) as client:
+        response = client.get("/change_version", params={"version": 999})
+        assert response.status_code in (400, 422)
+
+
+@pytest.mark.integration
 def test_detect_on_blank_image_returns_empty_results_or_low_confidence():
-    # часто на "пустой" картинке детекций нет
     response = client.get(
         "/detect",
         params={
